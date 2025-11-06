@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 18 Flashcards - 30 Questions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            max-height: 95vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M30,30 Q50,10 70,30 T90,50 T70,70 T50,90 T30,70 T10,50 T30,30 Z" fill="white"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .header .subtitle {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .progress {
+            background: #34495e;
+            height: 8px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .flashcard {
+            padding: clamp(10px, 3vw, 20px);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+        
+        .question-container {
+            display: flex;
+            gap: clamp(10px, 2vw, 15px);
+            align-items: flex-start;
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+        
+        .question-icon {
+            background: #3498db;
+            color: white;
+            width: clamp(35px, 8vw, 50px);
+            height: clamp(35px, 8vw, 50px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .question {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: 1.6;
+            color: #2c3e50;
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        .image-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            max-height: clamp(120px, 20vh, 180px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+        }
+        
+        .concept-image {
+            max-width: 100%;
+            max-height: clamp(110px, 18vh, 160px);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .hint-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(6px, 1.5vw, 10px);
+            margin-bottom: clamp(10px, 2vw, 20px);
+            flex: 1;
+        }
+        
+        .option {
+            padding: clamp(10px, 2vw, 14px) clamp(12px, 2.5vw, 18px);
+            border: 2px solid #bdc3c7;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 10px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #95a5a6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option-letter {
+            background: #ecf0f1;
+            color: #2c3e50;
+            width: clamp(24px, 5vw, 28px);
+            height: clamp(24px, 5vw, 28px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .option.correct .option-letter {
+            background: #28a745;
+            color: white;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .option.incorrect .option-letter {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .feedback {
+            padding: clamp(12px, 2.5vw, 16px);
+            border-radius: 12px;
+            margin-bottom: clamp(10px, 2vw, 16px);
+            display: none;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 12px);
+            font-weight: 500;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            display: flex;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            display: flex;
+        }
+        
+        .feedback-icon {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            flex-shrink: 0;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(12px, 2.5vw, 16px) clamp(16px, 3vw, 24px);
+            background: #ecf0f1;
+            border-top: 1px solid #bdc3c7;
+            flex-shrink: 0;
+        }
+        
+        .counter {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .btn {
+            padding: clamp(10px, 2vw, 12px) clamp(15px, 2.5vw, 20px);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1vw, 8px);
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-hint {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px);
+            font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+        }
+        
+        .btn-hint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .rationale {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffd43b;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(8px, 1.5vw, 12px);
+            display: none;
+        }
+        
+        .rationale.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .rationale h4 {
+            color: #856404;
+            margin-bottom: clamp(6px, 1.2vw, 10px);
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1.2vw, 8px);
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        }
+        
+        .rationale p {
+            color: #856404;
+            line-height: 1.6;
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+        }
+        
+        .hint {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196f3;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(6px, 1.2vw, 10px);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .hint.show {
+            display: block;
+        }
+        
+        .hint h4 {
+            color: #1565c0;
+            margin-bottom: clamp(6px, 1.2vw, 8px);
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 1vw, 6px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .hint p {
+            color: #1565c0;
+            line-height: 1.5;
+            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+            font-style: italic;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stats {
+            display: flex;
+            gap: clamp(8px, 1.5vw, 15px);
+            justify-content: center;
+            margin-top: clamp(4px, 1vw, 10px);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: clamp(5px, 1vw, 6px) clamp(8px, 1.8vw, 12px);
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+            white-space: nowrap;
+        }
+        
+        /* Cancel selection button */
+        .cancel-selection {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            margin: 0 auto clamp(10px, 2vw, 15px) auto;
+            display: none;
+        }
+        
+        .cancel-selection:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .cancel-selection.show {
+            display: flex;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 15px;
+            }
+            
+            .question-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+            
+            .question-icon {
+                align-self: center;
+            }
+            
+            .navigation {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+            
+            .counter {
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .navigation {
+                padding: 10px 12px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-width: 100px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Very small screens */
+        @media (max-width: 320px) {
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .header .subtitle {
+                font-size: 0.75rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                min-width: 80px;
+            }
+        }
+        
+        /* Large screens optimization */
+        @media (min-width: 1400px) {
+            .container {
+                max-height: 1000px;
+            }
+            
+            .flashcard {
+                padding: 25px;
+            }
+        }
+        
+        /* Tall screens */
+        @media (min-height: 1000px) {
+            .flashcard {
+                padding: 25px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .option {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Short screens */
+        @media (max-height: 600px) {
+            .header {
+                padding: 10px;
+            }
+            
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .question-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .question {
+                font-size: 0.9rem;
+            }
+            
+            .image-container {
+                max-height: 100px;
+            }
+            
+            .concept-image {
+                max-height: 90px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .option-letter {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+            
+            .navigation {
+                padding: 8px 10px;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Chapter 18 Flashcards</h1>
+            <div class="subtitle">Nursing Management of the Newborn - 30 Questions</div>
+            <div class="stats">
+                <div class="stat">🎯 30 Questions</div>
+                <div class="stat">💡 Hint Feature</div>
+                <div class="stat">📖 Visual Learning</div>
+                <div class="stat">↩️ Cancel Wrong Answers</div>
+            </div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question-container">
+                <div class="question-icon">?</div>
+                <div class="question" id="question"></div>
+            </div>
+            <div class="image-container" id="imageContainer">
+                <img class="concept-image" id="conceptImage" alt="Educational illustration">
+            </div>
+            
+            <div class="hint-container">
+                <button class="btn btn-hint" id="hintBtn" onclick="showHint()">
+                    💡 Show Hint
+                </button>
+                <div class="hint" id="hint">
+                    <h4>💡 Study Tip:</h4>
+                    <p id="hintText"></p>
+                </div>
+            </div>
+            
+            <div class="options" id="options"></div>
+            
+            <!-- Cancel Selection Button - Only shows for wrong answers -->
+            <button class="btn cancel-selection" id="cancelBtn" onclick="cancelSelection()">
+                ↩️ Cancel Selection
+            </button>
+            
+            <div class="feedback" id="feedback">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div id="feedbackText"></div>
+            </div>
+            <div class="rationale" id="rationale">
+                <h4>💡 Rationale:</h4>
+                <p id="rationaleText"></p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">
+                ⬅️ Previous
+            </button>
+            <div class="counter" id="counter">1/30</div>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">
+                Next ➡️
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const medicalImages = {
+            'newborn_respiratory': 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=400&h=200&fit=crop',
+            'breastfeeding': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=200&fit=crop',
+            'sleep_safety': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'heart_rate': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'temperature': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'jaundice': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'skin_assessment': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'airway_suction': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'head_assessment': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'hip_dysplasia': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'reflexes': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'vitamin_k': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'skin_rash': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'head_variations': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'eye_assessment': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'measurements': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'heart_assessment': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'genitalia': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'rooting_reflex': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'bathing': 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop',
+            'hydration': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'cord_care': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'vaginal_discharge': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'circumcision': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'screening': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'tachypnea': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'nutrition': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=200&fit=crop',
+            'oxygenation': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'hypothermia': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'formula_feeding': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=200&fit=crop'
+        };
+
+        const questions = [
+            {
+                question: "Prior to discharging a 24-hour-old newborn, the nurse assesses the newborn's respiratory status. What would the nurse expect to assess?",
+                options: [
+                    "respiratory rate 45 breaths/minute, irregular",
+                    "costal breathing pattern",
+                    "nasal flaring, rate 65 breaths/minute",
+                    "crackles on auscultation"
+                ],
+                correct: 0,
+                rationale: "Typically, respirations in a 24-hour-old newborn are symmetric, slightly irregular, shallow, and unlabored at a rate of 30 to 60 breaths/minute. The breathing pattern is primarily diaphragmatic. Nasal flaring, rates above 60 breaths per minute, and crackles suggest a problem.",
+                image: 'newborn_respiratory',
+                hint: "Think about normal newborn respiratory patterns - they're often irregular but within a specific range."
+            },
+            {
+                question: "The nurse encourages the mother of a healthy newborn to put the newborn to the breast immediately after birth for which reason?",
+                options: [
+                    "to aid in maturing the newborn's sucking reflex",
+                    "to encourage the development of maternal antibodies",
+                    "to facilitate maternal–infant bonding",
+                    "to enhance the clearing of the newborn's respiratory passages"
+                ],
+                correct: 2,
+                rationale: "Breastfeeding can be initiated immediately after birth. This immediate mother–newborn contact takes advantage of the newborn's natural alertness and fosters bonding. This contact also reduces maternal bleeding and stabilizes the newborn's temperature, blood glucose level, and respiratory rate. It is not associated with maturing the sucking reflex, encouraging the development of maternal antibodies, or aiding in clearing of the newborn's respiratory passages.",
+                image: 'breastfeeding',
+                hint: "Early contact between mother and newborn has important psychological benefits."
+            },
+            {
+                question: "When making a home visit, the nurse observes a newborn sleeping on his back in a bassinet. In one corner of the bassinet is some soft bedding material, and at the other end is a bulb syringe. The nurse determines that the mother needs additional teaching for which reason?",
+                options: [
+                    "The newborn should not be sleeping on his back.",
+                    "Soft bedding material should not be in areas where infants sleep.",
+                    "The bulb syringe should not be kept in the bassinet.",
+                    "This newborn should be sleeping in a crib."
+                ],
+                correct: 1,
+                rationale: "The nurse should instruct the mother to remove all fluffy bedding, quilts, stuffed animals, and pillows from the crib to prevent suffocation. Newborns and infants should be placed on their backs to sleep. Having the bulb syringe nearby in the bassinet is appropriate. Although a crib is the safest sleeping location, a bassinet is appropriate initially.",
+                image: 'sleep_safety',
+                hint: "Think about safe sleep guidelines for infants - what items in the sleep environment pose risks?"
+            },
+            {
+                question: "Assessment of a newborn reveals a heart rate of 180 beats per minute. To determine whether this finding is a common variation rather than a sign of distress, what else does the nurse need to know?",
+                options: [
+                    "How many hours old is this newborn?",
+                    "How long ago did this newborn eat?",
+                    "What was the newborn's birthweight?",
+                    "Is acrocyanosis present?"
+                ],
+                correct: 0,
+                rationale: "The typical heart rate of a newborn ranges from 110 to 160 beats per minute with wide fluctuation during activity and sleep. Typically heart rate is assessed every 30 minutes until stable for 2 hours after birth. The time of the newborn's last feeding and his birthweight would have no effect on his heart rate. Acrocyanosis is a common normal finding in newborns.",
+                image: 'heart_rate',
+                hint: "Newborn vital signs can vary based on how recently they were born and their activity level."
+            },
+            {
+                question: "When assessing a newborn 1 hour after birth, the nurse measures an axillary temperature of 95.8° F (35.4° C), an apical pulse of 114 beats per minute, and a respiratory rate of 60 breaths per minute. The nurse would identify which area as the priority?",
+                options: [
+                    "hypothermia",
+                    "impaired parenting",
+                    "deficient fluid volume",
+                    "risk for infection"
+                ],
+                correct: 0,
+                rationale: "The newborn's heart rate is slightly below the accepted range of 120 to 160 beats per minute; the respiratory rate is at the high end of the accepted range of 30 to 60 breaths per minute. However, the newborn's temperature is significantly below the accepted range of 97.7 to 99.7° F (36.5 to 37.6° C). Therefore, the priority problem area is hypothermia. There is no information to suggest impaired parenting. Additional information is needed to determine if there is deficient fluid volume or a risk for infection.",
+                image: 'temperature',
+                hint: "Temperature regulation is a critical concern for newborns immediately after birth."
+            },
+            {
+                question: "The nurse places a newborn with jaundice under the phototherapy lights in the nursery to achieve which goal?",
+                options: [
+                    "Prevent cold stress.",
+                    "Increase surfactant levels in the lungs.",
+                    "Promote respiratory stability.",
+                    "Decrease the serum bilirubin level."
+                ],
+                correct: 3,
+                rationale: "Jaundice reflects elevated serum bilirubin levels; phototherapy helps to break down the bilirubin for excretion. Phototherapy has no effect on body temperature, surfactant levels, or respiratory stability.",
+                image: 'jaundice',
+                hint: "Phototherapy is specifically used to treat a condition related to bilirubin metabolism."
+            },
+            {
+                question: "During a physical assessment of a newborn, the nurse observes bluish markings across the newborn's lower back. The nurse interprets this finding as:",
+                options: [
+                    "milia.",
+                    "Mongolian spots.",
+                    "stork bites.",
+                    "birth trauma."
+                ],
+                correct: 1,
+                rationale: "Mongolian spots are blue or purple splotches that appear on the lower back and buttocks of newborns. Milia are unopened sebaceous glands frequently found on a newborn's nose. Stork bites are superficial vascular areas found on the nape of the neck and eyelids and between the eyes and upper lip. Birth trauma would be manifested by bruising, swelling, and possible deformity.",
+                image: 'skin_assessment',
+                hint: "These are benign pigmented areas commonly found in specific locations on newborns."
+            },
+            {
+                question: "While making rounds in the nursery, the nurse sees a 6-hour-old baby girl gagging and turning bluish. What would the nurse do first?",
+                options: [
+                    "Alert the primary care provider stat, and turn the newborn to her right side.",
+                    "Administer oxygen via facial mask by positive pressure.",
+                    "Lower the newborn's head to stimulate crying.",
+                    "Aspirate the oral and nasal pharynx with a bulb syringe."
+                ],
+                correct: 3,
+                rationale: "The nurse's first action would be to suction the oral and nasal pharynx with a bulb syringe to maintain airway patency. Turning the newborn to her right side will not alleviate the blockage due to secretions. Administering oxygen via positive pressure is not indicated at this time. Lowering the newborn's head would be inappropriate.",
+                image: 'airway_suction',
+                hint: "The priority in any respiratory emergency is always to establish a patent airway first."
+            },
+            {
+                question: "While performing a physical assessment of a newborn boy, the nurse notes diffuse edema of the soft tissues of his scalp that crosses suture lines. The nurse documents this finding as:",
+                options: [
+                    "molding.",
+                    "microcephaly.",
+                    "caput succedaneum.",
+                    "cephalhematoma."
+                ],
+                correct: 2,
+                rationale: "Caput succedaneum is localized edema on the scalp, a poorly demarcated soft tissue swelling that crosses the suture lines. Molding refers to the elongated shape of the fetal head as it accommodates to the passage through the birth canal. Microcephaly refers to a head circumference that is 2 standard deviations below average or less than 10% of normal parameters for gestational age. Cephalhematoma is a localized effusion of blood beneath the periosteum of the skull.",
+                image: 'head_assessment',
+                hint: "This type of swelling crosses suture lines, unlike another common newborn head finding."
+            },
+            {
+                question: "Assessment of a newborn reveals uneven gluteal (buttocks) skin creases and a 'clunk' when the Ortolani maneuver is performed. What would the nurse suspect?",
+                options: [
+                    "slipping of the periosteal joint",
+                    "developmental hip dysplasia",
+                    "normal newborn variation",
+                    "overriding of the pelvic bone"
+                ],
+                correct: 1,
+                rationale: "A 'clunk' indicates the femoral head hitting the acetabulum as the head reenters the area. This, along with uneven gluteal creases, suggests developmental hip dysplasia. These findings are not a normal variation and are not associated with slipping of the periosteal joint or overriding of the pelvic bone.",
+                image: 'hip_dysplasia',
+                hint: "This condition involves improper formation of the hip joint and is screened for with specific maneuvers."
+            },
+            {
+                question: "A nurse is assessing a newborn's reflexes. The nurse strokes the lateral sole of the newborn's foot from the heel to the ball of the foot to elicit which reflex?",
+                options: [
+                    "Babinski",
+                    "tonic neck",
+                    "stepping",
+                    "plantar grasp"
+                ],
+                correct: 0,
+                rationale: "The Babinski reflex is elicited by stroking the lateral sole of the newborn's foot from the heel toward and across the ball of the foot. The tonic neck reflex is tested by having the newborn lie on his back and then turn his head to one side. The stepping reflex is elicited by holding the newborn upright and inclined forward with the soles of the feet on a flat surface. The plantar grasp reflex is elicited by placing a finger against the area just below the newborn's toes.",
+                image: 'reflexes',
+                hint: "This reflex causes the toes to fan upward and outward when the sole is stroked."
+            },
+            {
+                question: "The nurse administers vitamin K intramuscularly to the newborn based on which rationale?",
+                options: [
+                    "Stop Rh sensitization.",
+                    "Increase erythropoiesis.",
+                    "Enhance bilirubin breakdown.",
+                    "Promote blood clotting."
+                ],
+                correct: 3,
+                rationale: "Vitamin K promotes blood clotting by increasing the synthesis of prothrombin by the liver. Rho(D) immune globulin prevents Rh sensitization. Erythropoietin stimulates erythropoiesis. Phototherapy enhances bilirubin breakdown.",
+                image: 'vitamin_k',
+                hint: "Newborns have low levels of this vitamin at birth, which is essential for coagulation."
+            },
+            {
+                question: "The nurse is assessing the skin of a newborn and notes a rash on the newborn's face and chest. The rash consists of small papules and is scattered with no pattern. The nurse interprets this finding as:",
+                options: [
+                    "harlequin sign.",
+                    "nevus flammeus.",
+                    "erythema toxicum.",
+                    "port wine stain."
+                ],
+                correct: 2,
+                rationale: "Erythema toxicum (newborn rash) is a benign, idiopathic, generalized, transient rash that occurs in up to 70% of all newborns during the first week of life. It consists of small papules or pustules on the skin resembling flea bites. The rash is common on the face, chest, and back. One of the chief characteristics of this rash is its lack of pattern. It is caused by the newborn's eosinophils reacting to the environment as the immune system matures. Harlequin sign refers to the dilation of blood vessels on only one side of the body, giving the newborn the appearance of wearing a clown suit. It gives a distinct midline demarcation, which is described as pale on the nondependent side and red on the opposite, dependent side. Nevus flammeus or port wine stain is a capillary angioma located directly below the dermis. It is flat with sharp demarcations and is purple–red. This skin lesion is made up of mature capillaries that are congested and dilated.",
+                image: 'skin_rash',
+                hint: "This is a common, benign newborn rash that appears in the first week of life."
+            },
+            {
+                question: "A nurse is conducting a refresher program for a group of nurses working in the newborn nursery. After teaching the group about variations in newborn head size and appearance, the nurse determines that the teaching was successful when the group identifies which variation as normal? Select all that apply.",
+                options: [
+                    "cephalhematoma",
+                    "molding",
+                    "closed fontanels",
+                    "caput succedaneum",
+                    "posterior fontanel diameter 1.5 cm"
+                ],
+                correct: 0,
+                rationale: "Normal variations in newborn head size and appearance include cephalhematoma, molding, and caput succedaneum. Microcephaly, closed fontanels, or a posterior fontanel diameter greater than 1 cm are considered abnormal.",
+                image: 'head_variations',
+                hint: "These are common findings related to the birth process that typically resolve without intervention."
+            },
+            {
+                question: "The nurse is assessing a newborn's eyes. Which findings would the nurse identify as normal? Select all that apply.",
+                options: [
+                    "slow blink response",
+                    "able to track object to midline",
+                    "transient deviation of the eyes",
+                    "involuntary repetitive eye movement",
+                    "absent red reflex"
+                ],
+                correct: 1,
+                rationale: "Assessment of the eyes should reveal a rapid blink reflex, ability to track objects to the midline, transient strabismus (deviation or wandering of the eyes independently), searching nystagmus (involuntary repetitive eye movement), and a red reflex.",
+                image: 'eye_assessment',
+                hint: "Newborns have immature eye coordination that leads to some expected variations."
+            },
+            {
+                question: "Assessment of a newborn's head circumference reveals that it is 34 cm. The nurse would suspect that this newborn's chest circumference would be:",
+                options: [
+                    "30 cm.",
+                    "32 cm.",
+                    "34 cm.",
+                    "36 cm."
+                ],
+                correct: 1,
+                rationale: "The newborn's chest should be round, symmetric, and 2 to 3 cm smaller than the head circumference. Therefore, this newborn's chest circumference of 31 to 32 cm would be normal.",
+                image: 'measurements',
+                hint: "There's a specific size relationship between a newborn's head and chest measurements."
+            },
+            {
+                question: "The nurse is auscultating a newborn's heart and places the stethoscope at the point of maximal impulse at which location?",
+                options: [
+                    "just superior to the nipple, at the midsternum",
+                    "lateral to the midclavicular line at the fourth intercostal space",
+                    "at the fifth intercostal space to the left of the sternum",
+                    "directly adjacent to the sternum at the second intercostals space"
+                ],
+                correct: 1,
+                rationale: "The point of maximal impulse (PMI) in a newborn is a lateral to midclavicular line located at the fourth intercostal space.",
+                image: 'heart_assessment',
+                hint: "Newborn heart anatomy and placement differs slightly from adults."
+            },
+            {
+                question: "The nurse is inspecting the external genitalia of a male newborn. Which finding would alert the nurse to a possible problem?",
+                options: [
+                    "limited rugae",
+                    "large scrotum",
+                    "palpable testes in scrotal sac",
+                    "negative engorgement"
+                ],
+                correct: 0,
+                rationale: "The scrotum usually appears relatively large and should be pink in white neonates and dark brown in neonates of color. Rugae should be well formed and should cover the scrotal sac. There should not be bulging, edema(engorgement), or discoloration. Testes should be palpable in the scrotal sac and feel firm and smooth and be of equal size on both sides of the scrotal sac.",
+                image: 'genitalia',
+                hint: "Well-developed rugae indicate full-term gestation in male newborns."
+            },
+            {
+                question: "When assessing a newborn's reflexes, the nurse strokes the newborn's cheek, and the newborn turns toward the side that was stroked and begins sucking. The nurse documents which reflex as being positive?",
+                options: [
+                    "palmar grasp reflex",
+                    "tonic neck reflex",
+                    "Moro reflex",
+                    "rooting reflex"
+                ],
+                correct: 3,
+                rationale: "The rooting reflex is elicited by stroking the newborn's cheek. The newborn should turn toward the side that was stroked and should begin to make sucking movements. The palmar grasp reflex is elicited by placing a finger on the newborn's open palm. The baby's hand will close around the finger. Attempting to remove the finger causes the grip to tighten. The tonic neck reflex is elicited by having the newborn lie on the back and turning the head to one side. The arm toward which the baby is facing should extend straight away from the body with the hand partially open, whereas the arm on the side away from the face is flexed and the fist is clenched tightly. Reversing the direction to which the face is turned reverses the position. The Moro reflex is elicited by placing the newborn on his or her back, supporting the upper body weight of the supine newborn by the arms using a lifting motion without lifting the newborn off the surface. The arms are released suddenly, the newborn will throw the arms outward and flex the knees, and then the arms return to the chest. The fingers also spread to form a C.",
+                image: 'rooting_reflex',
+                hint: "This reflex helps the newborn find the food source."
+            },
+            {
+                question: "A nurse is teaching new parents about bathing their newborn. The nurse determines that the teaching was successful when the parents make which statement?",
+                options: [
+                    "\"We can put a tiny bit of lotion on his skin, and then rub it in gently.\"",
+                    "\"We should avoid using any kind of baby powder.\"",
+                    "\"We need to bathe him at least four to five times a week.\"",
+                    "\"We should clean his eyes after washing his face and hair.\""
+                ],
+                correct: 1,
+                rationale: "Powders should not be used, because they can be inhaled, causing respiratory distress. If the parents want to use oils and lotions, have them apply a small amount onto their hand first, away from the newborn; this warms the lotion. Then the parents should apply the lotion or oil sparingly. Parents need to be instructed that a bath two or three times weekly is sufficient for the first year because too frequent bathing may dry the skin. The eyes are cleaned first and only with plain water; then the rest of the face is cleaned with plain water.",
+                image: 'bathing',
+                hint: "Some common baby care products can actually pose respiratory risks."
+            },
+            {
+                question: "A new mother who is breastfeeding her newborn asks the nurse, \"How will I know if my baby is drinking enough?\" Which response by the nurse would be most appropriate?",
+                options: [
+                    "\"If he seems content after feeding, that should be a sign.\"",
+                    "\"Make sure he drinks at least 5 minutes on each breast.\"",
+                    "\"He should wet between 6 to 10 diapers each day.\"",
+                    "\"If his lips are moist, then he's okay.\""
+                ],
+                correct: 2,
+                rationale: "Soaking 6 to 10 diapers a day indicates adequate hydration. Contentedness after feeding is not an indicator for adequate hydration. Typically a newborn wakes up 8 to 12 times per day for feeding. As the infant gets older, the time on the breast increases. Moist mucous membranes help to suggest adequate hydration, but this is not the best indicator.",
+                image: 'hydration',
+                hint: "Output is a reliable indicator of adequate fluid intake in newborns."
+            },
+            {
+                question: "A nurse is teaching a postpartum client and her partner about caring for their newborn's umbilical cord site. Which statement by the parents indicates a need for additional teaching?",
+                options: [
+                    "\"We can put him in the tub to bathe him once the cord falls off and is healed.\"",
+                    "\"The cord stump should change from brown to yellow.\"",
+                    "\"Exposing the stump to the air helps it to dry.\"",
+                    "\"We need to call the primary care provider if we notice a funny odor.\""
+                ],
+                correct: 1,
+                rationale: "The cord stump should change color from yellow to brown or black. Therefore the parents need additional teaching if they state the color changes from brown to yellow. Tub baths are avoided until the cord has fallen off and the area is healed. Exposing the stump to the air helps it to dry. The parents should notify their primary care provider if there is any bleeding, redness, drainage, or foul odor from the cord stump.",
+                image: 'cord_care',
+                hint: "Think about the normal progression of umbilical cord drying and separation."
+            },
+            {
+                question: "While changing a female newborn's diaper, the nurse observes a mucus-like, slightly bloody vaginal discharge. Which action would the nurse do next?",
+                options: [
+                    "Document this as pseudo menstruation.",
+                    "Notify the primary care provider immediately.",
+                    "Obtain a culture of the discharge.",
+                    "Inspect for engorgement."
+                ],
+                correct: 0,
+                rationale: "The nurse should assess pseudomenstruation, a vaginal discharge composed of mucus mixed with blood, which may be present during the first few weeks of life. This discharge requires no treatment. The discharge is a normal finding and thus does not need to be reported immediately. It is not an indication of infection. The female genitalia normally will be engorged, so assessing for engorgement is not indicated.",
+                image: 'vaginal_discharge',
+                hint: "This is a normal physiological response to maternal hormone withdrawal."
+            },
+            {
+                question: "A nurse is describing the advantages and disadvantages of circumcision to a group of expectant parents. Which statement by the parents indicates effective teaching?",
+                options: [
+                    "\"Sexually transmitted infections are more common in circumcised males.\"",
+                    "\"The rate of penile cancer is less for circumcised males.\"",
+                    "\"Urinary tract infections are more easily treated in circumcised males.\"",
+                    "\"Circumcision is a risk factor for acquiring HIV infection.\""
+                ],
+                correct: 1,
+                rationale: "The risk for penile cancer appears to be slightly lower for males who are circumcised. However, penile cancer is rare and other risk factors such as genital warts and HPV infection seem to play a larger role. Sexually transmitted infections are less common in circumcised males, but the risk is believed to be related more to behavioral factors than circumcision status. Circumcised males have a 50% lower risk of acquiring HIV infection. Urinary tract infections are slightly less common in circumcised boys. However, rates are low in both circumcised and uncircumcised boys and are easily treated without long-term sequelae.",
+                image: 'circumcision',
+                hint: "There are some modest health benefits associated with circumcision."
+            },
+            {
+                question: "A newborn is scheduled to undergo a screening test for phenylketonuria (PKU). The nurse prepares to obtain the blood sample from the newborn's:",
+                options: [
+                    "finger.",
+                    "heel.",
+                    "scalp vein.",
+                    "umbilical vein."
+                ],
+                correct: 1,
+                rationale: "Screening tests for genetic and inborn errors of metabolism require a few drops of blood taken from the newborn's heel. The finger, scalp vein, or umbilical vein are inappropriate sites for the blood sample.",
+                image: 'screening',
+                hint: "This is the standard site for newborn screening blood collection."
+            },
+            {
+                question: "Assessment of a newborn reveals transient tachypnea. The nurse reviews the newborn's medical record. Which factor in the newborn's history would the nurse identify as playing a role in this condition?",
+                options: [
+                    "vaginal birth",
+                    "shortened labor",
+                    "central nervous system depressant during labor",
+                    "maternal hypertension"
+                ],
+                correct: 2,
+                rationale: "Transient tachypnea of the newborn occurs when the fetal liquid in the lungs is removed slowly or incompletely. This can be due to the lack of thoracic squeezing that occurs during a cesarean birth or diminished respiratory effort if the mother received central nervous system depressant medication. Prolonged labor, macrosomia of the fetus, and maternal asthma also have been associated with this condition.",
+                image: 'tachypnea',
+                hint: "Certain medications given during labor can affect newborn respiratory function."
+            },
+            {
+                question: "A nurse is providing teaching to a new mother about her newborn's nutritional needs. Which suggestions would the nurse include in the teaching? Select all that apply.",
+                options: [
+                    "Supplement with iron if the woman is breastfeeding.",
+                    "Provide supplemental water intake with feedings.",
+                    "Feed the newborn every 2 to 4 hours during the day.",
+                    "Burp the newborn frequently throughout each feeding.",
+                    "Use feeding time for promoting closeness."
+                ],
+                correct: 2,
+                rationale: "Most newborns are on demand feeding schedules and are allowed to feed when they awaken. When they go home, mothers are encouraged to feed their newborns every 2 to 4 hours during the day and only when the newborn awakens during the night for the first few days after birth. Newborns swallow air during feedings, which causes discomfort and fussiness. Parents can prevent this by burping them frequently throughout the feeding. Feeding is also more than an opportunity to get nutrients into the newborn. It is also a time for closeness and sharing. Iron supplementation is recommended for infants who are bottle-fed. Fluid requirements for the newborn and infant do range from 100 to 150 mL/kg daily. This requirement can be met through breast or bottle feedings. Thus, additional water supplementation is not necessary.",
+                image: 'nutrition',
+                hint: "Think about practical feeding recommendations that support both nutrition and bonding."
+            },
+            {
+                question: "The nurse completes the initial assessment of a newborn. Which finding would lead the nurse to suspect that the newborn is experiencing difficulty with oxygenation?",
+                options: [
+                    "respiratory rate of 54 breaths/minute",
+                    "abdominal breathing",
+                    "nasal flaring",
+                    "acrocyanosis"
+                ],
+                correct: 2,
+                rationale: "Nasal flaring is a sign of respiratory difficulty in the newborn. A rate of 54 breaths/minute, diaphragmatic/abdominal breathing, and acrocyanosis are normal findings.",
+                image: 'oxygenation',
+                hint: "This is one of the classic signs of respiratory distress in newborns."
+            },
+            {
+                question: "Just after birth, a newborn's axillary temperature is 94°F (34.4°C). What action would be most appropriate?",
+                options: [
+                    "Assess the newborn's gestational age.",
+                    "Rewarm the newborn gradually.",
+                    "Observe the newborn every hour.",
+                    "Notify the primary care provider if the temperature goes lower."
+                ],
+                correct: 1,
+                rationale: "A newborn's temperature is typically maintained at 97.7° F to 99.7° F (36.5° C to 37.5° C). Since this newborn's temperature is significantly lower, the nurse should institute measures to rewarm the newborn gradually. Assessment of gestational age is completed regardless of the newborn's temperature. Observation would be inappropriate because lack of action may lead to a further lowering of the temperature. The nurse should notify the primary care provider of the newborn's current temperature since it is outside normal parameters.",
+                image: 'hypothermia',
+                hint: "Newborns are particularly vulnerable to temperature instability and need prompt intervention."
+            },
+            {
+                question: "A new parent is talking with the nurse about feeding the newborn. The parent has chosen to use formula. The parent asks, \"How can I make sure that my baby is getting what is needed?\" Which response(s) by the nurse would be appropriate? Select all that apply.",
+                options: [
+                    "\"Make sure to use an iron-fortified formula until your baby is about 1 year old.\"",
+                    "\"Start giving your baby fluoride supplements now so your baby develops strong teeth.\"",
+                    "\"Since you are not breastfeeding, your baby needs a baby multivitamin each day.\"",
+                    "\"Your baby gets enough fluid with formula, so you do not need to give extra water.\"",
+                    "\"It is important to give your baby vitamin D each day.\""
+                ],
+                correct: 0,
+                rationale: "Fluid requirements for the newborn and infant range from 100 to 150 mL/kg daily. This requirement can be met through breastfeeding or bottle feeding. Additional water supplementation is not necessary. Adequate carbohydrates, fats, protein, and vitamins are achieved through consumption of breast milk or formula. Iron-fortified formula is recommended for all infants who are not breastfed from birth to 1 year of age. The breastfed infant draws on iron reserves for the first 6 months and then needs iron-rich foods or supplementation added at 6 months of age. All infants (breastfed and bottle fed) should receive a daily supplement of 400 International Units of vitamin D starting within the first few days of life to prevent rickets and vitamin D deficiency. It is also recommended that fluoride supplementation be given to infants not receiving fluoridated water after the age of 6 months.",
+                image: 'formula_feeding',
+                hint: "Consider the specific nutritional needs of formula-fed infants versus breastfed infants."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedOption = null;
+        let score = 0;
+        let answers = Array(questions.length).fill(null);
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            document.getElementById('counter').textContent = `${currentQuestion + 1}/${questions.length}`;
+            
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Load image
+            const imageContainer = document.getElementById('imageContainer');
+            const conceptImage = document.getElementById('conceptImage');
+            if (question.image && medicalImages[question.image]) {
+                conceptImage.src = medicalImages[question.image];
+                imageContainer.style.display = 'flex';
+            } else {
+                imageContainer.style.display = 'none';
+            }
+            
+            // Load options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reset feedback and rationale
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').className = 'rationale';
+            document.getElementById('hint').className = 'hint';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? 'Finish ➡️' : 'Next ➡️';
+            document.getElementById('nextBtn').disabled = answers[currentQuestion] === null;
+            
+            // Reset cancel button visibility
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // If this question was already answered, show the answer
+            if (answers[currentQuestion] !== null) {
+                selectOption(answers[currentQuestion], true);
+            }
+        }
+
+        function selectOption(index, fromMemory = false) {
+            // If we're just loading a previously selected answer, don't process it as new
+            if (fromMemory) {
+                highlightSelectedOption(index);
+                showFeedback(index);
+                return;
+            }
+            
+            // If an option is already selected, do nothing (unless we're loading from memory)
+            if (selectedOption !== null && !fromMemory) return;
+            
+            selectedOption = index;
+            answers[currentQuestion] = index;
+            
+            highlightSelectedOption(index);
+            showFeedback(index);
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function cancelSelection() {
+            // Reset the selected option
+            selectedOption = null;
+            answers[currentQuestion] = null;
+            
+            // Remove highlighting from all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+            });
+            
+            // Hide feedback and rationale
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').classList.remove('show');
+            
+            // Hide the cancel button
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // Disable next button until a new selection is made
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function highlightSelectedOption(index) {
+            const options = document.querySelectorAll('.option');
+            const question = questions[currentQuestion];
+            
+            options.forEach((option, i) => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+                
+                if (i === index) {
+                    option.classList.add('selected');
+                    
+                    if (i === question.correct) {
+                        option.classList.add('correct');
+                        if (!answers[currentQuestion]) score++;
+                        
+                        // Don't show cancel button for correct answers
+                        document.getElementById('cancelBtn').classList.remove('show');
+                    } else {
+                        option.classList.add('incorrect');
+                        // Also highlight the correct answer
+                        options[question.correct].classList.add('correct');
+                        
+                        // Show cancel button only for wrong answers
+                        document.getElementById('cancelBtn').classList.add('show');
+                    }
+                }
+            });
+        }
+
+        function showFeedback(index) {
+            const question = questions[currentQuestion];
+            const feedback = document.getElementById('feedback');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackText = document.getElementById('feedbackText');
+            const rationale = document.getElementById('rationale');
+            const rationaleText = document.getElementById('rationaleText');
+            
+            if (index === question.correct) {
+                feedback.className = 'feedback correct';
+                feedbackIcon.textContent = '✅';
+                feedbackText.textContent = 'Correct! Well done.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedbackIcon.textContent = '❌';
+                feedbackText.textContent = `Incorrect. The right answer is: ${String.fromCharCode(65 + question.correct)}`;
+            }
+            
+            feedback.style.display = 'flex';
+            rationaleText.textContent = question.rationale;
+            rationale.classList.add('show');
+        }
+
+        function showHint() {
+            const hint = document.getElementById('hint');
+            const hintText = document.getElementById('hintText');
+            const question = questions[currentQuestion];
+            
+            hintText.textContent = question.hint;
+            hint.classList.add('show');
+        }
+
+        function nextCard() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                selectedOption = null;
+                loadQuestion();
+            } else {
+                // Quiz finished - show results
+                alert(`Quiz completed! Your score: ${score}/${questions.length}`);
+                currentQuestion = 0;
+                selectedOption = null;
+                score = 0;
+                answers = Array(questions.length).fill(null);
+                loadQuestion();
+            }
+        }
+
+        function previousCard() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                selectedOption = answers[currentQuestion];
+                loadQuestion();
+            }
+        }
+
+        // Initialize the app
+        loadQuestion();
+    </script>
+</body>
+</html>
